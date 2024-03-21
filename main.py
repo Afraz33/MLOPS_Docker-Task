@@ -1,23 +1,27 @@
-class mlops:
-    def __init__(self, totalStudents):
-        self.totalStudents = totalStudents
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
 
-    def getTotalStudents(self):
-        return self.totalStudents
+# Load the data
+data = pd.read_csv('PremierLeague.csv')
 
-    def addStudents(self):
-        self.totalStudents = self.totalStudents+1
+# Preprocess the data
+# Feature: FullTimeAwayTeamGoals
+X = data['FullTimeAwayTeamGoals'].values.reshape(-1, 1)
+y = data['FullTimeHomeTeamGoals'].values  # Target: FullTimeHomeTeamGoals
 
-    def removeStudent(self):
-        self.totalStudents = self.totalStudents - 1
+# Split the data into training and testing sets
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42)
 
-    def getClassName(self):
-        return "MLOPS (CS-B)"
+# Create and train the linear regression model
+model = LinearRegression()
+model.fit(X_train, y_train)
 
+# Make predictions
+y_pred = model.predict(X_test)
 
-# random comment 5 to test builds
-mlops_class = mlops(5)
-mlops_class.addStudents()
-mlops_class.removeStudent()
-print(mlops_class.getTotalStudents())
-print(mlops_class.getClassName())
+# Evaluate the model
+mse = mean_squared_error(y_test, y_pred)
+print('Mean Squared Error:', mse)
