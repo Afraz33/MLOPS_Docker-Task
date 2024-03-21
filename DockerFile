@@ -1,0 +1,26 @@
+# Use a base image with Python environment
+FROM python:3.9-slim AS base
+
+# Set working directory
+WORKDIR /app
+
+# Create directory structure
+RUN mkdir data
+
+# Copy requirements file
+COPY requirements.txt .
+
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy all content from the repository into the working directory
+COPY . .
+
+# Second stage for a smaller final image
+FROM base AS final
+
+# Additional setup if needed
+# For example, setting environment variables or running additional commands
+
+# Command to run the application
+CMD ["python", "app.py"]
